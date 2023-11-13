@@ -42,8 +42,8 @@ CREATE OR REPLACE TABLE bloomberg_index (
     BBGTicker STRING,
     OASD FLOAT,
     OutstandingE FLOAT,
-    FileName STRING,
-    FolderName STRING,
+    FileName VARCHAR(255),
+    FolderName VARCHAR(255),
     AWS_Timestamp TIMESTAMP_LTZ
 );
 
@@ -127,8 +127,8 @@ RUMVTotalUSD FLOAT,
 MVHedgeB FLOAT,
 MVHedgeE FLOAT,
 MaturityE FLOAT,
-FileName STRING,
-FolderName STRING,
+FileName VARCHAR(255),
+FolderName VARCHAR(255),
 AWS_Timestamp TIMESTAMP_LTZ
 );
 
@@ -143,6 +143,6 @@ CREATE or replace TABLE bloomberg_map (
     Percent FLOAT,
     FileName VARCHAR(255),
     FolderName VARCHAR(255),
-    AWS_Timestamp TIMESTAMP
+    AWS_Timestamp TIMESTAMP_LTZ
 );
 
