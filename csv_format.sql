@@ -4,3 +4,4 @@ CREATE or replace FILE FORMAT csv_format
   SKIP_HEADER = 1 
   FIELD_OPTIONALLY_ENCLOSED_BY = '"' 
   NULL_IF = ('NULL', 'null');
+  
