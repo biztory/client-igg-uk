@@ -13,7 +13,7 @@ FROM '@stg_lgim'
 FILE_FORMAT = csv_format
 PATTERN = '.*LDIAnalytics.*';
 
-COPY INTO LDI_FUND_CHARACTERISTICS
+COPY INTO LGIM_LDI_FUND_CHARACTERISTICS
 FROM '@stg_lgim'
 FILE_FORMAT = csv_format
 PATTERN = '.*Fund Collateral.*';
