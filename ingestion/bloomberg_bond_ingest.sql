@@ -3,8 +3,8 @@ use sysadmin;
 USE SCHEMA igg_source_dev.bloomberg_bond;
 
 CREATE OR REPLACE STAGE stg_bloomberg_bond
-  STORAGE_INTEGRATION = S3_INTERGRATION
-  URL = 's3://s3-biz-igg-dev-processed/23-10-27 Biztory Extended Dataset Example/Bloomberg_Bond/' 
+  STORAGE_INTEGRATION = S3_INTEGRATION
+  URL = 's3://s3-biz-igg-lon-dev-processed/23-10-27 Biztory Extended Dataset Example/Bloomberg_Bond/' 
   FILE_FORMAT = csv_format
   DIRECTORY = ( ENABLE = true AUTO_REFRESH = true );
 
