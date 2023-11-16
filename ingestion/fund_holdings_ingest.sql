@@ -1,7 +1,7 @@
 
 CREATE OR REPLACE STAGE stg_fundholdings
-  STORAGE_INTEGRATION = S3_INTERGRATION
-  URL = 's3://s3-biz-igg-dev-processed/23-10-27 Biztory Extended Dataset Example/FundHoldings' 
+  STORAGE_INTEGRATION = S3_INTEGRATION
+  URL = 's3://s3-biz-igg-lon-dev-processed/23-10-27 Biztory Extended Dataset Example/FundHoldings' 
   FILE_FORMAT = csv_format
   DIRECTORY = ( ENABLE = true AUTO_REFRESH = true );
 
@@ -14,4 +14,4 @@ CREATE OR REPLACE STAGE stg_fundholdings
 COPY INTO fund_holdings
 FROM '@stg_fundholdings'
 FILE_FORMAT = csv_format
-;
+PATTERN = '.*Fund_Holdings.*';
