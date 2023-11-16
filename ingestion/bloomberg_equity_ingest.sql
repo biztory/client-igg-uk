@@ -2,8 +2,8 @@ use sysadmin;
 USE SCHEMA igg_source.bloomberg_equity;
 
 CREATE OR REPLACE STAGE stg_bloomberg_equity
-  STORAGE_INTEGRATION = S3_INTERGRATION
-  URL = 's3://s3-biz-igg-dev-processed/23-10-27 Biztory Extended Dataset Example/Bloomberg_Equity' 
+  STORAGE_INTEGRATION = S3_INTEGRATION
+  URL = 's3://s3-biz-igg-lon-dev-processed/23-10-27 Biztory Extended Dataset Example/Bloomberg_Equity' 
   FILE_FORMAT = csv_format
   DIRECTORY = ( ENABLE = true AUTO_REFRESH = true );
 
