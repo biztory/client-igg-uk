@@ -9,7 +9,7 @@ CREATE OR REPLACE STAGE stg_columbia
 
 
 
-COPY INTO LDI_FUND_CHARACTERISTICS
+COPY INTO COL_LDI_FUND_CHARACTERISTICS
 FROM '@stg_columbia'
 FILE_FORMAT = csv_format
 PATTERN = '.*fund_durations.*';
