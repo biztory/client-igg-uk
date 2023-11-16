@@ -1,7 +1,7 @@
 
 CREATE OR REPLACE STAGE stg_esg
-  STORAGE_INTEGRATION = S3_INTERGRATION
-  URL = 's3://s3-biz-igg-dev-processed/23-10-27 Biztory Extended Dataset Example/Impact_Cubed_ESG/'
+  STORAGE_INTEGRATION = S3_INTEGRATION
+  URL = 's3://s3-biz-igg-lon-dev-processed/23-10-27 Biztory Extended Dataset Example/Impact_Cubed_ESG/'
   FILE_FORMAT = csv_format
   DIRECTORY = ( ENABLE = true AUTO_REFRESH = true );
 
