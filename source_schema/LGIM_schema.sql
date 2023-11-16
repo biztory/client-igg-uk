@@ -25,7 +25,7 @@ AWS_timestamp TIMESTAMP_LTZ
 );
 
 
-create or replace table ldi_fund_characteristics (
+create or replace table LGIM_LDI_FUND_CHARACTERISTICS (
 
 Key INT,
 InterestRate STRING,
