@@ -38,3 +38,6 @@ execute task task_bloomberg_levels_open;
 
 /* view task history */
 select * from table(information_schema.task_history(TASK_NAME => 'task_bloomberg_levels_close'));
+
+select * from table(information_schema.task_history())
+order by query_start_time desc;
