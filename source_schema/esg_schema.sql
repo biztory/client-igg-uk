@@ -11,7 +11,7 @@ AWS_Timestamp TIMESTAMP_LTZ
 
 create or replace table biodiversity (
 
-key TIMESTAMP_LTZ,
+key NUMBER,
 TICKER STRING,
 ISIN STRING,
 CompanyName STRING,
@@ -187,11 +187,11 @@ AWS_Timestamp TIMESTAMP_LTZ
 
 create or replace table sovereign (
 
-Key TIMESTAMP_LTZ,
+Key NUMBER,
 Country STRING,
 Factor STRING,
 Theme STRING,
-Year FLOAT,
+Year STRING,
 Universe STRING,
 SDG FLOAT,
 Category STRING,
@@ -206,8 +206,5 @@ Folder_Name VARCHAR(255),
 AWS_Timestamp TIMESTAMP_LTZ
 
 );
-
-
-
 
 

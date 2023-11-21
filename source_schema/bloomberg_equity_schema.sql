@@ -3,10 +3,10 @@ use warehouse compute_wh;
 use database igg_source;
 use schema bloomberg_equity;
 
-CREATE or replace TABLE bloomberg_holdings_open  (
+CREATE or replace TABLE bloomberg_holdings_delta  (
 
 Key INT,
-Index_Calculation_Date DATE,
+Index_Calculation_Date STRING,
 Version INT,
 Index_Key STRING,
 Index_Provider STRING,
@@ -14,7 +14,7 @@ Index_Name STRING,
 Index_Ticker STRING,
 Index_FIGI STRING,
 Index_Currency VARCHAR(3),
-Effective_Date DATE,
+Effective_Date STRING,
 Security_Name STRING,
 Security_Ticker STRING,
 Security_ISIN STRING,
@@ -39,7 +39,7 @@ Index_Shares FLOAT,
 Market_Cap_Local FLOAT,
 Security_FX_Rate FLOAT,
 Security_FX_Source STRING,
-Security_FX_Date DATE,
+Security_FX_Date STRING,
 Market_Cap FLOAT,
 Weight FLOAT,
 Corporate_Event STRING,
@@ -58,7 +58,7 @@ AWS_Timestamp TIMESTAMP_LTZ
 CREATE OR REPLACE TABLE bloomberg_index_events (
 
 Key INT,
-Index_Calculation_Date DATE,
+Index_Calculation_Date STRING,
 Version INT,
 Index_Key STRING,
 Index_Provider STRING,
@@ -82,8 +82,8 @@ Size STRING,
 BICS_Level_Code_Assigned BIGINT,
 Corporate_Event_ID BIGINT,
 Sequence_Number INT,
-Announcement_Date DATE,
-Last_Updated_Date DATE,
+Announcement_Date STRING,
+Last_Updated_Date STRING,
 Implementation_Date STRING,
 Effective_Date STRING,
 Effective_Date_Override STRING,
@@ -150,9 +150,9 @@ Folder_Name VARCHAR(255),
 AWS_Timestamp TIMESTAMP_LTZ
 );
 
-create or replace table bloomberg_levels_close(
+create or replace table bloomberg_levels_open(
 Key INT,
-Index_Calculation_Date DATE,
+Index_Calculation_Date STRING,
 Version INT,
 Index_Key STRING,
 Index_Provider STRING,
@@ -176,3 +176,5 @@ File_Name VARCHAR(255),
 Folder_Name VARCHAR(255),
 AWS_Timestamp TIMESTAMP_LTZ
 );
+
+
