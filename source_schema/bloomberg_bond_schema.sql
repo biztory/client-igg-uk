@@ -54,7 +54,7 @@ CREATE OR REPLACE TABLE bloomberg_bonds (
   Issuer STRING,
   Ticker STRING,
   Coupon FLOAT,
-  MaturDate DATE,
+  MaturDate STRING,
   QualityB STRING,
   QualityE STRING,
   Currency STRING,

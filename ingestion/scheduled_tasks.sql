@@ -4,7 +4,7 @@ grant execute task on account to role sysadmin;
 use role sysadmin;
 use warehouse compute_wh; 
 use database igg_source; 
-create schema tasks; 
+create schema tasks;  
 
 create or replace task task_bloomberg_levels_close
 warehouse = COMPUTE_WH
