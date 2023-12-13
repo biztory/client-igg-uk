@@ -19,7 +19,7 @@ schema_table_file_dict = {'ICE_MARKET_CURVE':
     ,'CURVEXCCY':'.*CurveXCCY.*'
     ,'CURVEYC':'.*CurveYC.*'
     ,'CURVEZC':'.*CurveZC.*'
-    ,'SPOT_FORWARD':'*Spot_Forward.*'}}
+    ,'SPOT_FORWARD':'.*Spot_Forward.*'}}
     
 
 def find_table_and_pattern(file_name, schema_table_file_dict):
@@ -44,7 +44,7 @@ def connect_to_snowflake(user, password, account, role, warehouse, database, sch
     
 bucket_name = "s3-biz-igg-lon-dev-incomming"
 output_bucket = "s3-biz-igg-lon-dev-processed"
-stage_name = 'stg_market_curve'
+stage_name = 'STG_ICE_MARKET_CURVE'
 
 # Specify the key (filename) you want to download from the S3 bucket
 file_key = "23-10-27 Biztory Extended Dataset Example/ICE_MarketCurve/DataX_FX_Spot_Forward_2023-12-04_1700LON_2023-12-04_170201LON.csv"
@@ -54,7 +54,7 @@ local_file_path = f"tmp/{file_key}"
 os.makedirs(os.path.dirname(local_file_path), exist_ok=True)
 
 s3_client = boto3.client('s3')
-s3_client.download_file(bucket_name,file_key,local_file_path)
+s3_client.download_file(output_bucket,file_key,local_file_path)
 print("File downloaded from S3 successfully.")
 
 snowflake_schema = find_table_and_pattern(schema_table_file_dict=schema_table_file_dict,file_name=file_key)[0]
@@ -77,43 +77,24 @@ cur.execute(f"USE {os.environ['SNOWFLAKE_DATABASE']}.{os.environ['SNOWFLAKE_SCHE
 print("Connected to Snowflake successfully.")
 
 # Upload file to Snowflake stage
-query = f"PUT'file:///tmp/{file_key}' @{stage_name}"
+query = f"CREATE OR REPLACE STAGE stg_market_curve \
+STORAGE_INTEGRATION = S3_INTEGRATION \
+URL = 's3://s3-biz-igg-lon-dev-processed/23-10-27 Biztory Extended Dataset Example/ICE_MarketCurve/' \
+FILE_FORMAT = csv_format \
+DIRECTORY = ( ENABLE = true AUTO_REFRESH = true );" 
+
 cur.execute(query)
+
 
 print("File uploaded to Snowflake stage successfully.")
 
-    #     # Copy data into Snowflake table
-    #     cur.execute(f"COPY INTO {snowflake_table} FROM @~/{stage_name}/{file_key}\
-    #     FILE_FORMAT = csv_format\
-    #     PATTERN = {snowflake_file_format}")
-    #     print("Data copied into Snowflake table successfully.")
+#Copy data into Snowflake table
 
-    # except (NoCredentialsError, ClientError, DatabaseError, ProgrammingError) as e:
-    #     print(f"Error: {e}")
-    #     return {
-    #         'statusCode': 500,
-    #         'body': str(e)
-    #     }
-    # finally:
-    #     if 'cur' in locals():
-    #         cur.close()
-    #     if 'conn' in locals() and conn.is_connected():
-    #         conn.close()
-    #         print("Snowflake connection closed.")
+cur.execute(f"COPY INTO {snowflake_table} FROM '@stg_market_curve'\
+FILE_FORMAT = csv_format \
+PATTERN = '{snowflake_file_format}';")
 
-    # return {
-    #     'statusCode': 200,
-    #     'body': 'Data processing completed successfully.'
-    # }
-
-
-# # Upload file to Snowflake stage
-# cur.execute(f"PUT file:///tmp/{file_name} @~/{stage_name}")
-# print("File uploaded to Snowflake stage successfully.")
-
-# # Copy data into Snowflake table
-# cur.execute(f"COPY INTO {snowflake_table} FROM @~/{stage_name}/{file_name}")
-# print("Data copied into Snowflake table successfully.")
+print(f"Data copied into Snowflake table successfully for files {file_key}")
 
 
 '''
