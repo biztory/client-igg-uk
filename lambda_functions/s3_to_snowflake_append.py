@@ -14,20 +14,37 @@ import urllib
 # Load environment variables from .env file
 load_dotenv()
 
-schema_table_file_dict = {'ICE_MARKET_CURVE':
-    {'CURVEOIS':'.*CurveOIS.*'
-    ,'CURVEXCCY':'.*CurveXCCY.*'
-    ,'CURVEYC':'.*CurveYC.*'
-    ,'CURVEZC':'.*CurveZC.*'
-    ,'SPOT_FORWARD':'.*Spot_Forward.*'}}
-    
+data_mapping = { 'STG_MARKET_CURVE': {
+    'ICE_MarketCurve': {
+        'ICE_MARKET_CURVE': {
+            'CURVEOIS': '.*CurveOIS.*',
+            'CURVEXCCY': '.*CurveXCCY.*',
+            'CURVEYC': '.*CurveYC.*',
+            'CURVEZC': '.*CurveZC.*',
+            'SPOT_FORWARD': '.*Spot_Forward.*'
+            }
+        }
+    }
+}
 
-def find_table_and_pattern(file_name, schema_table_file_dict):
-    for schema, tables in schema_table_file_dict.items():
-        for table, pattern in tables.items():
-            if pattern and pattern.replace('*','').replace('.','') in file_name:
-                return schema, table, pattern
-    return None, None, None
+def find_values(file_name, data_mapping):
+    for stage,table in data_mapping.items():
+        if os.path.dirname(file_key).split('/')[-1] in table:
+            for values in table.keys():
+                FolderName = values
+            for files,formats in table.items():
+                for vals,keys in formats.items():
+                    for names,file_format in keys.items():
+                        if names in os.path.basename(file_key).upper():
+                            # print(f"Schema_Name: {vals}")
+                            # print(f"File_Format_Name: '{file_format}'")
+                            # print(f"Table_Name: {names}")
+        # print(f"Folder_Name: {FolderName}")
+        # print(f"Stage_Name: {stage}")
+                            return vals,file_format,names,FolderName,stage
+        
+
+file_key = "23-10-27 Biztory Extended Dataset Example/ICE_MarketCurve/DataX_FX_Spot_Forward_2023-12-04_1700LON_2023-12-04_170201LON.csv"
 
 def connect_to_snowflake(user, password, account, role, warehouse, database, schema):
     conn = snowflake.connector.connect(
@@ -41,25 +58,19 @@ def connect_to_snowflake(user, password, account, role, warehouse, database, sch
     )
     return conn
 
-    
-bucket_name = "s3-biz-igg-lon-dev-incomming"
-output_bucket = "s3-biz-igg-lon-dev-processed"
-stage_name = 'STG_ICE_MARKET_CURVE'
+# # # Specify the local file path where you want to save the downloaded file
+# # local_file_path = f"tmp/{file_key}"
+# # os.makedirs(os.path.dirname(local_file_path), exist_ok=True)
 
-# Specify the key (filename) you want to download from the S3 bucket
-file_key = "23-10-27 Biztory Extended Dataset Example/ICE_MarketCurve/DataX_FX_Spot_Forward_2023-12-04_1700LON_2023-12-04_170201LON.csv"
+# # s3_client = boto3.client('s3')
+# # s3_client.download_file(output_bucket,file_key,local_file_path)
+# # print("File downloaded from S3 successfully.")
 
-# Specify the local file path where you want to save the downloaded file
-local_file_path = f"tmp/{file_key}"
-os.makedirs(os.path.dirname(local_file_path), exist_ok=True)
+snowflake_schema = find_values(file_key, data_mapping)[0]
+snowflake_table = find_values(file_key, data_mapping)[2]
+snowflake_file_format = find_values(file_key, data_mapping)[1]
+snowflake_stage = find_values(file_key, data_mapping)[4]
 
-s3_client = boto3.client('s3')
-s3_client.download_file(output_bucket,file_key,local_file_path)
-print("File downloaded from S3 successfully.")
-
-snowflake_schema = find_table_and_pattern(schema_table_file_dict=schema_table_file_dict,file_name=file_key)[0]
-snowflake_table = find_table_and_pattern(schema_table_file_dict=schema_table_file_dict,file_name=file_key)[1]
-snowflake_file_format = find_table_and_pattern(schema_table_file_dict=schema_table_file_dict,file_name=file_key)[2]
 
 conn = connect_to_snowflake(user=os.environ.get("SNOWFLAKE_USER"),
                                 password=os.environ.get("SNOWFLAKE_PASSWORD"),
@@ -77,25 +88,23 @@ cur.execute(f"USE {os.environ['SNOWFLAKE_DATABASE']}.{os.environ['SNOWFLAKE_SCHE
 print("Connected to Snowflake successfully.")
 
 # Upload file to Snowflake stage
-query = f"CREATE OR REPLACE STAGE stg_market_curve \
+query = f"CREATE OR REPLACE STAGE {snowflake_stage} \
 STORAGE_INTEGRATION = S3_INTEGRATION \
-URL = 's3://s3-biz-igg-lon-dev-processed/23-10-27 Biztory Extended Dataset Example/ICE_MarketCurve/' \
+URL = 's3://{os.environ['S3_BUCKET_NAME']}/{os.path.dirname(file_key)}' \
 FILE_FORMAT = csv_format \
 DIRECTORY = ( ENABLE = true AUTO_REFRESH = true );" 
 
 cur.execute(query)
 
-
 print("File uploaded to Snowflake stage successfully.")
 
 #Copy data into Snowflake table
 
-cur.execute(f"COPY INTO {snowflake_table} FROM '@stg_market_curve'\
+cur.execute(f"COPY INTO {snowflake_table} FROM '@{snowflake_stage}'\
 FILE_FORMAT = csv_format \
 PATTERN = '{snowflake_file_format}';")
 
 print(f"Data copied into Snowflake table successfully for files {file_key}")
-
 
 '''
 TODO: Function to map schema/tables to filenames in dictionary
