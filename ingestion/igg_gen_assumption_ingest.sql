@@ -1,8 +1,10 @@
 
-
+use sysadmin;
+USE SCHEMA igg_source.IGG_GeneralAssumptionTables;
+USE WAREHOUSE INGEST_WH;
 
 CREATE OR REPLACE STAGE stg_gen_assumption
-  STORAGE_INTEGRATION = S3_INTEGRATION
+  STORAGE_INTEGRATION = S3_INT
   URL = 's3://s3-biz-igg-lon-dev-processed/23-10-27 Biztory Extended Dataset Example/IGG_GeneralAssumptionTables/'
   FILE_FORMAT = csv_format
   DIRECTORY = ( ENABLE = true AUTO_REFRESH = true );

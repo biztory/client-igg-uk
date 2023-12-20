@@ -1,12 +1,15 @@
-use sysadmin;
-
-USE SCHEMA igg_source_dev.bloomberg_bond;
+use role SYSADMIN;
+USE SCHEMA igg_source.bloomberg_bond;
+USE WAREHOUSE INGEST_WH;
 
 CREATE OR REPLACE STAGE stg_bloomberg_bond
-  STORAGE_INTEGRATION = S3_INTEGRATION
+  STORAGE_INTEGRATION = S3_INT
   URL = 's3://s3-biz-igg-lon-dev-processed/23-10-27 Biztory Extended Dataset Example/Bloomberg_Bond/' 
   FILE_FORMAT = csv_format
   DIRECTORY = ( ENABLE = true AUTO_REFRESH = true );
+
+describe integration s3_int; 
+
 
 
     LIST '@stg_bloomberg_bond';

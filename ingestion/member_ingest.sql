@@ -73,12 +73,12 @@ AWS_Timestamp TIMESTAMP_LTZ
 
 
 drop stage stg_scheme_characteristics
-
-
-
+use sysadmin;
+USE SCHEMA igg_source.IGG_MEMBER_DATA;
+USE WAREHOUSE INGEST_WH;
 
 CREATE OR REPLACE STAGE stg_members
-  STORAGE_INTEGRATION = S3_INTEGRATION
+  STORAGE_INTEGRATION = S3_INT
   URL = 's3://s3-biz-igg-lon-dev-processed/23-10-27 Biztory Extended Dataset Example/IGG_MemberData/'
   FILE_FORMAT = csv_format
   DIRECTORY = ( ENABLE = true AUTO_REFRESH = true );

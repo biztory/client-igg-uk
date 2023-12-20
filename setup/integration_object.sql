@@ -14,3 +14,4 @@ desc integration S3_INT;
 
 show integrations;
 
+grant usage ON integration s3_int to ROLE SYSADMIN;
