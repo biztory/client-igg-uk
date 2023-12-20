@@ -1,20 +1,16 @@
-
 use role accountadmin;
 use database igg_source;
-use schema bloomberg_bond;
-use warehouse compute_wh;
+use warehouse INGEST_WH;
 
-create or replace STORAGE INTEGRATION S3_INTEGRATION
+create or replace STORAGE INTEGRATION S3_INT
 TYPE = EXTERNAL_STAGE
 STORAGE_PROVIDER = 'S3'
 ENABLED = TRUE
 STORAGE_AWS_ROLE_ARN = 'arn:aws:iam::400693409844:role/snowflake'
-STORAGE_ALLOWED_LOCATIONS = ('s3://s3-biz-igg-lon-dev-processed/23-10-27 Biztory Extended Dataset Example/');
+STORAGE_ALLOWED_LOCATIONS = ('s3://s3-biz-igg-lon-dev-processed/23-10-27 Biztory Extended Dataset Example/')
+COMMENT = 'integration stage for all processed files in S3';
 
-desc integration S3_INTEGRATION;
--- arn + external id need to be added to snowflake role policy in AWS
+desc integration S3_INT;
 
+show integrations;
 
-GRANT CREATE STAGE ON SCHEMA IGG_SOURCE_DEV.BLOOMBERG_BOND TO ROLE sysadmin;
-
-GRANT USAGE ON INTEGRATION S3_INTEGRATION TO ROLE sysadmin;
