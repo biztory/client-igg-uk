@@ -35,3 +35,9 @@ create pipe IGG_SOURCE.BLOOMBERG_BOND.BLOOMBERG_MAP auto_ingest=true as
 desc pipe BLOOMBERG_MAP;
 -- arn:aws:sqs:eu-west-2:186002598237:sf-snowpipe-AIDASWTU6NFOX4HYFQO2T-6RviS9_K_FKCRXV__c2vrw
 
+-- for testing truncate table and run lambda, we do this once sftp is setup
+-- let igg know we will be removing data before testing
+
+-- we wnat to append not overwrite does auto ingets do this? YES Snowflake looks at s3 metadata
+
+--pipe_usage_history + load_history functions

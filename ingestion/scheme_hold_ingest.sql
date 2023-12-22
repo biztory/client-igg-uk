@@ -14,4 +14,6 @@ CREATE OR REPLACE STAGE stg_scheme_characteristics
 COPY INTO scheme_holdings
 FROM '@stg_scheme_holdings'
 FILE_FORMAT = csv_format
+PATTERN = '.*R_IGG- Client.*'
 ;
+

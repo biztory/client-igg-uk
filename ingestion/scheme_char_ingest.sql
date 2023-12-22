@@ -14,4 +14,5 @@ CREATE OR REPLACE STAGE stg_scheme_characteristics
 COPY INTO igg_scheme_characteristics.scheme_characteristics
 FROM '@stg_scheme_characteristics'
 FILE_FORMAT = csv_format
+PATTERN = '.*Scheme_Characteristics.csv'
 ;
